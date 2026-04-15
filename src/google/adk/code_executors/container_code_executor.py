@@ -67,7 +67,7 @@ class ContainerCodeExecutor(BaseCodeExecutor):
     """
   The path to the directory containing the Dockerfile.
   If set, build the image from the dockerfile path instead of using the
-  predefined image. Either docker_path or image must be set.
+  predefined image. Either docker_path or image must be set .
   """
 
     input_dir: str = "/tmp/inputs"
