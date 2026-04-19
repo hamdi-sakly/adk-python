@@ -82,7 +82,7 @@ class ContainerCodeExecutor(BaseCodeExecutor):
 
   stateful: bool = Field(default=False, frozen=True, exclude=True)
 
-  optimize_data_file: bool = Field(default=False, frozen=True, exclude=True)
+  optimize_data_file: bool = Field(default=True, frozen=True, exclude=True)
 
   _client: DockerClient = None
   _container: Container = None
@@ -117,10 +117,6 @@ class ContainerCodeExecutor(BaseCodeExecutor):
       )
     if "stateful" in data and data["stateful"]:
       raise ValueError("Cannot set `stateful=True` in ContainerCodeExecutor.")
-    if "optimize_data_file" in data and data["optimize_data_file"]:
-      raise ValueError(
-          "Cannot set `optimize_data_file=True` in ContainerCodeExecutor."
-      )
 
     super().__init__(**data)
     self.base_url = base_url
@@ -239,13 +235,16 @@ class ContainerCodeExecutor(BaseCodeExecutor):
       The list of output files retrieved from the container.
     """
     try:
-      tar_bytes, stat = self._container.get_archive(self.output_dir)
+      tar_stream, _ = self._container.get_archive(self.output_dir)
     except docker.errors.APIError as e:
       if e.response.status_code == 404:
         logger.debug("No output files found at %s", self.output_dir)
         return []
       raise
-
+    if isinstance(tar_stream, bytes):
+      tar_bytes = tar_stream
+    else:
+      tar_bytes = b"".join(tar_stream)
     tar_buffer = io.BytesIO(tar_bytes)
     output_files = []
 
