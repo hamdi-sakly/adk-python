@@ -283,15 +283,15 @@ async def test_run_cli_save_session(
   if session_file.exists():
     session_file.unlink()
 
-    await cli.run_cli(
-        agent_parent_dir=str(parent_dir),
-        agent_folder_name=folder_name,
-        input_file=None,
-        saved_session_file=None,
-        save_session=False,
-        save_session_on_runtime=False,
-        interval=60,
-    )
+  await cli.run_cli(
+      agent_parent_dir=str(parent_dir),
+      agent_folder_name=folder_name,
+      input_file=None,
+      saved_session_file=None,
+      save_session=True,
+      save_session_on_runtime=False,
+      interval=60,
+  )
 
   assert session_file.exists()
   data = json.loads(session_file.read_text())

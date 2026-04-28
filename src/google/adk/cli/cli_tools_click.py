@@ -683,7 +683,7 @@ def cli_run(  # type: ignore[misc]
     artifact_service_uri: Optional[str] = None,
     memory_service_uri: Optional[str] = None,
     use_local_storage: bool = True,
-) -> None:  
+) -> None:
   """Runs an interactive CLI for a certain agent.
 
   AGENT: The path to the agent source code folder.

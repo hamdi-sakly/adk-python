@@ -117,9 +117,9 @@ async def run_interactively(
   )
 
   # Background task for periodic session saving
-  save_task: Optional[asyncio.Task[None]] = None  
+  save_task: Optional[asyncio.Task[None]] = None
 
-  async def _periodic_save_session() -> None:  
+  async def _periodic_save_session() -> None:
     """Periodically save the session to disk every interval seconds."""
     nonlocal session, save_task
     try:
