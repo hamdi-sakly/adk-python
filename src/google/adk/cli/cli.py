@@ -117,18 +117,18 @@ async def run_interactively(
   )
 
   # Background task for periodic session saving
-  save_task: Optional[asyncio.Task] = None
+  save_task: Optional[asyncio.Task[None]] = None  
 
-  async def _periodic_save_session():
+  async def _periodic_save_session() -> None:  
     """Periodically save the session to disk every interval seconds."""
     nonlocal session, save_task
     try:
       while True:
-        await asyncio.sleep(interval)  # Save every Interval seconds
+        await asyncio.sleep(interval)
+        click.echo(f"interval : {interval}")
 
         if save_session_on_runtime and agent_root:
           try:
-            # Get the current session state
             current_session = await session_service.get_session(
                 app_name=session.app_name,
                 user_id=session.user_id,
@@ -136,7 +136,6 @@ async def run_interactively(
             )
 
             if current_session:
-              # Save to runtime session file
               runtime_session_path = (
                   agent_root / ".adk" / "runtime_session.json"
               )
@@ -148,10 +147,8 @@ async def run_interactively(
                   encoding="utf-8",
               )
           except Exception:
-            # Silently ignore errors to avoid breaking the interactive loop
             pass
     except asyncio.CancelledError:
-      # Task was cancelled, exit gracefully
       pass
 
   # Start the periodic save task if enabled
@@ -179,7 +176,6 @@ async def run_interactively(
             if text := "".join(part.text or "" for part in event.content.parts):
               click.echo(f"[{event.author}]: {text}")
   finally:
-    # Clean up the background task
     if save_task:
       save_task.cancel()
       try:

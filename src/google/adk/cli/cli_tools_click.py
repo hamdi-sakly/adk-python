@@ -671,7 +671,7 @@ def adk_services_options(*, default_use_local_storage: bool = True):
         exists=True, dir_okay=True, file_okay=False, resolve_path=True
     ),
 )
-def cli_run(
+def cli_run(  # type: ignore[misc]
     agent: str,
     save_session: bool,
     save_session_on_runtime: bool,
@@ -683,7 +683,7 @@ def cli_run(
     artifact_service_uri: Optional[str] = None,
     memory_service_uri: Optional[str] = None,
     use_local_storage: bool = True,
-):
+) -> None:  
   """Runs an interactive CLI for a certain agent.
 
   AGENT: The path to the agent source code folder.
